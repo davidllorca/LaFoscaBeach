@@ -1,5 +1,6 @@
 package com.davidllorca.lafoscabeach.com.davidllorca.lafoscabeach.activities;
 
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
@@ -303,6 +304,16 @@ public class MainActivity extends BaseActivity {
      */
     private class GetStateTask extends AsyncTask<String, Void, String> {
 
+        private ProgressDialog progress;
+
+        @Override protected void onPreExecute() {
+            progress = new ProgressDialog(MainActivity.this);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setMessage("Connect to server...");
+            progress.setCancelable(false);
+            progress.show();
+        }
+
         @Override
         protected String doInBackground(String... params) {
             HttpClient httpClient = new DefaultHttpClient();
@@ -344,6 +355,12 @@ public class MainActivity extends BaseActivity {
             }
             return null;
         }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            progress.dismiss();
+        }
     }
 
     /**
@@ -355,6 +372,16 @@ public class MainActivity extends BaseActivity {
      * If connection and action are successful return 0, -1 otherwise.
      */
     private class ChangeStateTask extends AsyncTask<String, Void, Integer> {
+
+        private ProgressDialog progress;
+
+        @Override protected void onPreExecute() {
+            progress = new ProgressDialog(MainActivity.this);
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setMessage("Connect to server...");
+            progress.setCancelable(false);
+            progress.show();
+        }
 
         @Override
         protected Integer doInBackground(String... params) {
@@ -410,6 +437,12 @@ public class MainActivity extends BaseActivity {
             } else {
                 return -1;
             }
+        }
+
+        @Override
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
+            progress.dismiss();
         }
     }
 }
