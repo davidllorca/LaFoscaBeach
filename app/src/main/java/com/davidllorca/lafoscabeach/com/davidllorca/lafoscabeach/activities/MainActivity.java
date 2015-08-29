@@ -1,4 +1,4 @@
-package com.davidllorca.lafoscabeach;
+package com.davidllorca.lafoscabeach.com.davidllorca.lafoscabeach.activities;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
 
+import com.davidllorca.lafoscabeach.R;
 import com.davidllorca.lafoscabeach.model.Kid;
 import com.davidllorca.lafoscabeach.model.ListKidsAdapater;
 
@@ -36,7 +37,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
-
+/**
+ * Main UI.
+ * <p/>
+ * Connect with server and get info from Fosca beach and show beach features and list of lost kids.
+ * <p/>
+ * Created by David Llorca <davidllorcabaron@gmail.com> on 28/8/15.
+ */
 public class MainActivity extends BaseActivity {
 
     /* Views */
@@ -70,32 +77,39 @@ public class MainActivity extends BaseActivity {
      * @return
      */
     private void checkBeachState() {
-        String result = null;
-        try {
-            result = new GetStateTask().execute(
-                    // Get authorization token from Bundle
-                    getIntent().getExtras().getString("token")).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
 
-        // Process result
-        if (result != null) {
-            processBeachData(result);
+        if (isOnline()) {
+            String result = null;
+            try {
+                result = new GetStateTask().execute(
+                        // Get authorization token from Bundle
+                        getIntent().getExtras().getString("token")).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+
+            // Process result
+            if (result != null) {
+                processBeachData(result);
+            } else {
+                showToast(getString(R.string.error_result));
+            }
         } else {
-            showToast(getString(R.string.error_result));
+            showToast(getString(R.string.no_connection));
         }
-    }
 
-    /**
-     * Get parameters of beach amb process data.
-     * <p/>
-     * In case of beach is open put content into layout, hide layout otherwise.
-     *
-     * @param result JSON with beach parameters
-     */
+        }
+
+        /**
+         * Get parameters of beach amb process data.
+         * <p/>
+         * In case of beach is open put content into layout, hide layout otherwise.
+         *
+         * @param result JSON with beach parameters
+         */
+
     private void processBeachData(String result) {
         try {
             // Convert response in JSON
@@ -145,21 +159,25 @@ public class MainActivity extends BaseActivity {
      * it get new data of beach with a new call to method checkBeachState().
      */
     private void openBeach() {
-        int resultChangeBeachState = -1;
-        try {
-            resultChangeBeachState = new ChangeStateTask().execute(OPEN).get();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-        if (resultChangeBeachState != -1) {
-            checkBeachState();
-            // Set visible all view components
-            beachDataLayout.setVisibility(View.VISIBLE);
-        } else {
-            // Show error message
-            showToast(getString(R.string.error_result));
+        if(isOnline()) {
+            int resultChangeBeachState = -1;
+            try {
+                resultChangeBeachState = new ChangeStateTask().execute(OPEN).get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            if (resultChangeBeachState != -1) {
+                checkBeachState();
+                // Set visible all view components
+                beachDataLayout.setVisibility(View.VISIBLE);
+            } else {
+                // Show error message
+                showToast(getString(R.string.error_result));
+            }
+        }else{
+            showToast(getString(R.string.no_connection));
         }
     }
 
@@ -281,7 +299,7 @@ public class MainActivity extends BaseActivity {
 
     /**
      * Call server to get information of the beach.
-     *
+     * <p/>
      * param[0] must be authorization token
      */
     private class GetStateTask extends AsyncTask<String, Void, String> {

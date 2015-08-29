@@ -1,31 +1,26 @@
-package com.davidllorca.lafoscabeach;
+package com.davidllorca.lafoscabeach.com.davidllorca.lafoscabeach.activities;
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.davidllorca.lafoscabeach.R;
+
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -33,12 +28,12 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
 
-
+/**
+ * First UI. Login/Register process.
+ * <p/>
+ * Created by David Llorca <davidllorcabaron@gmail.com> on 28/8/15.
+ */
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 
     /* Views */
@@ -46,9 +41,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private EditText passwordEt;
     private Button loginBtn;
     private Button registerBtn;
-
-    /* Variables */
-    private static String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +51,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
     @Override
     public void onClick(View v) {
+        // Check field's content
         if (validateFields()) {
             switch (v.getId()) {
                 case R.id.login_btn:
@@ -76,14 +69,28 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
     }
 
+    /**
+     * Do Login process.
+     */
     private void login() {
-        // do login
-        new LoginTask().execute();
+        if (isOnline()) {
+            // do login
+            new LoginTask().execute();
+        } else {
+            showToast(getString(R.string.no_connection));
+        }
     }
 
+    /**
+     * Do Register process.
+     */
     private void register() {
-        // do register
-        new RegisterTask().execute();
+        if (isOnline()) {
+            // do register
+            new RegisterTask().execute();
+        } else {
+            showToast(getString(R.string.no_connection));
+        }
     }
 
     /**
@@ -138,8 +145,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         registerBtn.setOnClickListener(this);
     }
 
+    /*
+        ASYNCTASKS
+     */
+
     /**
-     * AQUIIIIIIIIIIIIIIIIIIIIIIIIIIIIIII
+     * Call server for Register operation. If Register is successful it do Login automatically.
      */
     public class RegisterTask extends AsyncTask<String, Void, Void> {
 
@@ -202,7 +213,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     }
 
     /**
-     *
+     * Call server for Login operation. If process is successful it launch MainActivity automatically
+     * and it show message if request has been unauthorized.
      */
     private class LoginTask extends AsyncTask<String, Void, Void> {
         @Override
@@ -211,7 +223,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             // Set url
             HttpGet httpGet = new HttpGet(BASE_URL + LOGIN);
 
-            //Encoding GET data
+            //Encoding GET data header
             httpGet.setHeader("Accept", "application/json");
             httpGet.setHeader("Content-Type", "application/json");
             httpGet.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(getUserCredentials()[0], getUserCredentials()[1]), "UTF-8", false));

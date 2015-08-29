@@ -19,6 +19,9 @@
         <item>red</item>
     </string-array>
     <string name="search_kid">Search kid</string>
+
+    <!-- Toasts -->
+    <string name="no_connection">No network connection</string>
     <string name="error_result">"Ops! error in operation</string>
 
 </resources>
