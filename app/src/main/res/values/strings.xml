@@ -1,0 +1,24 @@
+<resources>
+    <string name="app_name">LaFoscaBeach</string>
+
+    <!-- LoginActivity -->
+    <string name="username_et">User name</string>
+    <string name="password_et">Password</string>
+    <string name="login_btn">Login</string>
+    <string name="register_btn">Register</string>
+    <string name="empty_fields">Some field is empty!</string>
+
+    <!-- MainActivity -->
+    <string name="beach_sw">Beach\'s state</string>
+    <string name="beach_sw_on">Open</string>
+    <string name="beach_sw_off">Close</string>
+    <string name="flag">Flag</string>
+    <string-array name="flags">
+        <item>green</item>
+        <item>yellow</item>
+        <item>red</item>
+    </string-array>
+    <string name="search_kid">Search kid</string>
+    <string name="error_result">"Ops! error in operation</string>
+
+</resources>
