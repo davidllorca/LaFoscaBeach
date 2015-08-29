@@ -182,7 +182,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                 StringEntity se = new StringEntity(jsonObject.toString());
                 se.setContentType("application/json");
                 httpPost.setEntity(se);
-                Log.d("JSON", jsonObject.toString());
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
@@ -191,7 +190,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 // write response to log
-                Log.d("Http Post Response:", response.getStatusLine().getStatusCode() + response.getStatusLine().getReasonPhrase() + "");
                 handleResult(response);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -232,7 +230,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             try {
                 HttpResponse response = httpClient.execute(httpGet);
                 // write response to log
-                Log.d("Http Get Response:", response.getStatusLine().getStatusCode() + response.getStatusLine().getReasonPhrase() + "");
                 handleResult(response);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -248,7 +245,6 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
                     try {
                         String result = EntityUtils.toString(response.getEntity());
                         JSONObject jsonObject = new JSONObject(result);
-                        Log.d("token: ", jsonObject.getString("authentication_token"));
                         launchMainActivity(jsonObject.getString("authentication_token"));
                     } catch (JSONException e) {
                         e.printStackTrace();

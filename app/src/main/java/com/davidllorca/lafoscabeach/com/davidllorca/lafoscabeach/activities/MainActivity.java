@@ -124,7 +124,6 @@ public class MainActivity extends BaseActivity {
 
                 // Set flag in spinner
                 String flag = beachData.getString("flag");
-                Log.d("flag:", flag);
                 setFlagInSpinner(flag);
 
                 // Get list of kids
@@ -319,7 +318,6 @@ public class MainActivity extends BaseActivity {
             try {
                 HttpResponse response = httpClient.execute(httpGet);
                 // write response to log
-                Log.d("Http GetState Response:", response.getStatusLine().getStatusCode() + response.getStatusLine().getReasonPhrase() + "");
                 return handleResult(response);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
@@ -340,7 +338,6 @@ public class MainActivity extends BaseActivity {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    Log.d("Result", result);
                     return result;
                 default:
                     break;
@@ -386,7 +383,6 @@ public class MainActivity extends BaseActivity {
                     StringEntity se = new StringEntity(flagJsonObject.toString());
                     se.setContentType("application/json");
                     httpPut.setEntity(se);
-                    Log.d("JSON", flagJsonObject.toString());
                 } catch (UnsupportedEncodingException e) {
                     e.printStackTrace();
                 }
@@ -396,7 +392,6 @@ public class MainActivity extends BaseActivity {
             try {
                 HttpResponse response = httpClient.execute(httpPut);
                 // write response to log
-                Log.d("Http PutState Response:", response.getStatusLine().getStatusCode() + response.getStatusLine().getReasonPhrase() + "");
                 return handleResult(response);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
