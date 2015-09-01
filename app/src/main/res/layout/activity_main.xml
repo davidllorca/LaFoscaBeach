@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <ImageView
-        android:id="@+id/beach_img"
-        android:layout_width="match_parent"
-        android:layout_height="260dp"
-        android:layout_gravity="center_horizontal"
-        android:src="@drawable/beach" />
+    <!-- <ImageView
+         android:id="@+id/beach_img"
+         android:layout_width="match_parent"
+         android:layout_height="260dp"
+         android:layout_gravity="center_horizontal"
+         android:src="@drawable/beach" />-->
 
     <Switch
         android:id="@+id/beach_switch"
@@ -43,18 +44,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown" />
+
+            <requestFocus />
         </LinearLayout>
 
         <EditText
+            android:id="@+id/search_ed"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/search_ed"
             android:hint="@string/search_kid" />
 
         <ListView
             android:id="@+id/kids_lv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:drawSelectorOnTop="true"
+            android:smoothScrollbar="false"
+            android:stackFromBottom="false" />
     </LinearLayout>
 </LinearLayout>

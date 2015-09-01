@@ -7,6 +7,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
@@ -15,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.davidllorca.lafoscabeach.R;
 import com.davidllorca.lafoscabeach.model.Kid;
@@ -341,7 +343,7 @@ public class MainActivity extends BaseActivity {
         private String handleResult(HttpResponse response) {
             // Check HTTP code of response
             switch (response.getStatusLine().getStatusCode()) {
-                case 200: // In case successful access
+                case OK: // In case successful access
                     // Get JSON data of body
                     String result = null;
                     try {

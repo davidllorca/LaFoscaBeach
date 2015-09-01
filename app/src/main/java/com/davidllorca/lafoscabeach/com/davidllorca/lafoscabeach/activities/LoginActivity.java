@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * First UI. Login/Register process.
@@ -87,7 +88,18 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     private void register() {
         if (isOnline()) {
             // do register
-            new RegisterTask().execute();
+            int resultRegister = -1;
+            try {
+                resultRegister = new RegisterTask().execute().get();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+            // Result of Register process
+            if (resultRegister == CREATED) {
+                login();
+            }// else.. Another suppose
         } else {
             showToast(getString(R.string.no_connection));
         }
@@ -152,11 +164,12 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
     /**
      * Call server for Register operation. If Register is successful it do Login automatically.
      */
-    public class RegisterTask extends AsyncTask<String, Void, Void> {
+    public class RegisterTask extends AsyncTask<String, Void, Integer> {
 
         private ProgressDialog progress;
 
-        @Override protected void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             progress = new ProgressDialog(LoginActivity.this);
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setMessage("Connect to server...");
@@ -165,7 +178,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
         }
 
         @Override
-        protected Void doInBackground(String... params) {
+        protected Integer doInBackground(String... params) {
             HttpClient httpClient = new DefaultHttpClient();
             // Set url
             HttpPost httpPost = new HttpPost(BASE_URL + CREATE_USER);
@@ -200,28 +213,27 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
             try {
                 HttpResponse response = httpClient.execute(httpPost);
                 // write response to log
-                handleResult(response);
+                return handleResult(response);
             } catch (ClientProtocolException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            return null;
+            return -1;
         }
 
-        private void handleResult(HttpResponse response) {
+        private int handleResult(HttpResponse response) {
             switch (response.getStatusLine().getStatusCode()) {
-                case 201: // If register has been successful...
-                    login();
-                    break;
+                case CREATED: // If register has been successful...
+                    return CREATED;
                 default:
-                    break;
+                    return -1;
             }
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Integer integer) {
+            super.onPostExecute(integer);
             progress.dismiss();
         }
     }
@@ -234,7 +246,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener 
 
         private ProgressDialog progress;
 
-        @Override protected void onPreExecute() {
+        @Override
+        protected void onPreExecute() {
             progress = new ProgressDialog(LoginActivity.this);
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setMessage("Connect to server...");

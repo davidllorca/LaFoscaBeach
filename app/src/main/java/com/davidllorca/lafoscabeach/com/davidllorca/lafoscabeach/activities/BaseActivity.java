@@ -24,6 +24,7 @@ public class BaseActivity extends Activity {
 
     /* Response Codes */
     protected static final int OK = 200;
+    protected static final int CREATED = 201;
     protected static final int NO_CONTENT = 204;
 
     /**
